@@ -6,6 +6,7 @@ A Telegram Group Management Bot Clone
 import logging
 import sys
 import os
+from typing import Iterable
 
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -32,6 +33,35 @@ logging.basicConfig(
     level=logging.INFO
 )
 logger = logging.getLogger(__name__)
+
+def _chunk_message(message: str, limit: int = 4000) -> Iterable[str]:
+    for start in range(0, len(message), limit):
+        yield message[start:start + limit]
+
+class TelegramLogHandler(logging.Handler):
+    def __init__(self, bot, chat_id: int):
+        super().__init__()
+        self.bot = bot
+        self.chat_id = chat_id
+
+    def emit(self, record: logging.LogRecord):
+        try:
+            message = self.format(record)
+            for chunk in _chunk_message(message):
+                self.bot.send_message(self.chat_id, chunk)
+        except Exception:
+            pass
+
+def setup_telegram_logging(bot):
+    if not LOGGER:
+        return
+    handler = TelegramLogHandler(bot, LOGGER)
+    handler.setLevel(logging.INFO)
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(pathname)s:%(lineno)d)'
+    )
+    handler.setFormatter(formatter)
+    logging.getLogger().addHandler(handler)
 
 # Error handler
 def error_handler(update: Update, context: CallbackContext):
@@ -178,6 +208,8 @@ def main():
     # Create updater
     updater = Updater(TOKEN, workers=WORKERS, use_context=True)
     dispatcher = updater.dispatcher
+
+    setup_telegram_logging(updater.bot)
     
     # Load modules
     load_modules(dispatcher)

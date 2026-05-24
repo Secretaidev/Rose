@@ -18,12 +18,18 @@ ENV = bool(os.environ.get('ENV', False))
 
 if ENV:
     # Environment variables configuration (for Heroku, Railway, etc.)
+    # TOKEN: get from @BotFather (example: 123456:ABCDEF...)
     TOKEN = os.environ.get('TOKEN', '')
+    # OWNER_ID: get from @userinfobot (example: 123456789)
     OWNER_ID = int(os.environ.get('OWNER_ID', '0'))
+    # OWNER_USERNAME: your Telegram username (example: your_username)
     OWNER_USERNAME = os.environ.get('OWNER_USERNAME', '')
     
     # Database
-    DATABASE_URL = os.environ.get('DATABASE_URL', 'sqlite:///rose_bot.db')
+    # MONGODB_URL: MongoDB Atlas connection string (example: ******cluster/db)
+    MONGODB_URL = os.environ.get('MONGODB_URL', '')
+    # DATABASE_URL: SQLAlchemy DB URL (example: sqlite:///rose_bot.db or ******host/db)
+    DATABASE_URL = os.environ.get('DATABASE_URL') or MONGODB_URL or 'sqlite:///rose_bot.db'
     
     # Webhook settings
     WEBHOOK = bool(os.environ.get('WEBHOOK', False))
@@ -52,22 +58,35 @@ if ENV:
     LOAD = os.environ.get('LOAD', '').split() if os.environ.get('LOAD') else []
     NO_LOAD = os.environ.get('NO_LOAD', '').split() if os.environ.get('NO_LOAD') else []
     
-    # Messages dump channel
+    # Messages dump channel (private channel ID, get via @userinfobot)
     MESSAGE_DUMP = os.environ.get('MESSAGE_DUMP', None)
     if MESSAGE_DUMP:
         MESSAGE_DUMP = int(MESSAGE_DUMP)
+    
+    # Logger channel (private channel ID for detailed logs; add bot as admin)
+    LOGGER = os.environ.get('LOGGER_ID') or os.environ.get('LOGGER')
+    if LOGGER:
+        LOGGER = int(LOGGER)
+    if not MESSAGE_DUMP and LOGGER:
+        MESSAGE_DUMP = LOGGER
     
     # Default language
     DEFAULT_LANG = os.environ.get('DEFAULT_LANG', 'en')
     
 else:
     # Local config.py configuration
+    # TOKEN: get from @BotFather (example: 123456:ABCDEF...)
     TOKEN = "YOUR_BOT_TOKEN_HERE"
+    # OWNER_ID: get from @userinfobot (example: 123456789)
     OWNER_ID = 123456789  # Your Telegram user ID
+    # OWNER_USERNAME: your Telegram username (example: your_username)
     OWNER_USERNAME = "your_username"
     
     # Database
-    DATABASE_URL = 'sqlite:///rose_bot.db'
+    # MONGODB_URL: MongoDB Atlas connection string (example: ******cluster/db)
+    MONGODB_URL = ''
+    # DATABASE_URL: SQLAlchemy DB URL (example: sqlite:///rose_bot.db or ******host/db)
+    DATABASE_URL = MONGODB_URL or 'sqlite:///rose_bot.db'
     
     # Webhook settings
     WEBHOOK = False
@@ -97,7 +116,13 @@ else:
     NO_LOAD = []
     
     # Messages dump channel
+    # MESSAGE_DUMP: private channel ID for moderation logs (example: -1001234567890)
     MESSAGE_DUMP = None
+    
+    # LOGGER: private channel ID for detailed logs (example: -1001234567890)
+    LOGGER = None
+    if not MESSAGE_DUMP and LOGGER:
+        MESSAGE_DUMP = LOGGER
     
     # Default language
     DEFAULT_LANG = 'en'

@@ -190,21 +190,34 @@ docker-compose up -d
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `TOKEN` | Yes | Bot token from @BotFather |
-| `OWNER_ID` | Yes | Your Telegram user ID |
+| `TOKEN` | Yes | Bot token from @BotFather (example: `123456:ABCDEF...`) |
+| `OWNER_ID` | Yes | Your Telegram user ID (get from @userinfobot) |
 | `OWNER_USERNAME` | No | Your Telegram username |
 | `ENV` | Yes (for Heroku/Railway) | Set to `ANYTHING` to use env vars |
-| `DATABASE_URL` | No | Database URL (default: SQLite) |
+| `DATABASE_URL` | No | SQLAlchemy DB URL (default: SQLite) |
+| `MONGODB_URL` | No | MongoDB Atlas URL (alias for `DATABASE_URL`) |
+| `LOGGER_ID` | No | Private channel ID for detailed logs (add bot as admin; get ID via @userinfobot) |
+| `MESSAGE_DUMP` | No | Chat ID for moderation/action logging (defaults to `LOGGER_ID`) |
 | `WEBHOOK` | No | Set to `True` to use webhooks |
 | `URL` | No | Webhook URL |
 | `PORT` | No | Webhook port (default: 8443) |
+| `CERT_PATH` | No | Webhook certificate path |
 | `WORKERS` | No | Worker threads (default: 8) |
 | `SUDO_USERS` | No | Space-separated sudo user IDs |
 | `SUPPORT_USERS` | No | Space-separated support user IDs |
 | `WHITELIST_USERS` | No | Space-separated whitelisted user IDs |
+| `LOAD` | No | Space-separated module names to load |
+| `NO_LOAD` | No | Space-separated module names to skip |
 | `DEL_CMDS` | No | Delete unauthorized commands |
 | `STRICT_GBAN` | No | Strict global ban enforcement |
-| `MESSAGE_DUMP` | No | Chat ID for action logging |
+| `ALLOW_EXCL` | No | Allow exclamation command prefix |
+| `BAN_STICKER` | No | Sticker file_id for ban messages |
+| `FED_ADMIN_TXT` | No | Federation admin display name |
+| `DEFAULT_LANG` | No | Default language code (example: `en`) |
+
+### Logging Notes
+
+If `LOGGER_ID` is set, the bot streams detailed logs to the private channel and does not write log files to disk. This keeps server storage clean while preserving history in the private channel.
 
 ## Required Bot Permissions
 
