@@ -1,0 +1,88 @@
+{
+  "name": "Rose Bot",
+  "description": "A powerful Telegram group management bot clone",
+  "repository": "https://github.com/yourusername/rose-bot",
+  "logo": "https://telegra.ph/file/5f1fac7d55e4ae5b0b55f.jpg",
+  "keywords": ["telegram", "bot", "group", "management", "moderation"],
+  "env": {
+    "TOKEN": {
+      "description": "Your bot token from @BotFather",
+      "required": true
+    },
+    "OWNER_ID": {
+      "description": "Your Telegram user ID",
+      "required": true
+    },
+    "OWNER_USERNAME": {
+      "description": "Your Telegram username",
+      "required": false
+    },
+    "DATABASE_URL": {
+      "description": "Database URL (PostgreSQL/SQLite)",
+      "value": "sqlite:///rose_bot.db",
+      "required": false
+    },
+    "ENV": {
+      "description": "Set to ANYTHING to use env variables",
+      "value": "ANYTHING",
+      "required": true
+    },
+    "WEBHOOK": {
+      "description": "Enable webhook mode",
+      "value": "False",
+      "required": false
+    },
+    "URL": {
+      "description": "Webhook URL (if using webhook)",
+      "required": false
+    },
+    "WORKERS": {
+      "description": "Number of worker threads",
+      "value": "8",
+      "required": false
+    },
+    "SUDO_USERS": {
+      "description": "Space-separated list of sudo user IDs",
+      "required": false
+    },
+    "SUPPORT_USERS": {
+      "description": "Space-separated list of support user IDs",
+      "required": false
+    },
+    "WHITELIST_USERS": {
+      "description": "Space-separated list of whitelisted user IDs",
+      "required": false
+    },
+    "MESSAGE_DUMP": {
+      "description": "Chat ID for logging actions",
+      "required": false
+    },
+    "DEL_CMDS": {
+      "description": "Delete commands from non-admins",
+      "value": "False",
+      "required": false
+    },
+    "STRICT_GBAN": {
+      "description": "Strict global ban enforcement",
+      "value": "True",
+      "required": false
+    }
+  },
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "addons": [
+    {
+      "plan": "heroku-postgresql:mini",
+      "optional": true
+    }
+  ]
+}
